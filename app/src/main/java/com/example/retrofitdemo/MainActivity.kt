@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
             .getRetrofitInstance()
             .create(AlbumService::class.java)
 
-        //getRequestWithPathParameter()
+        getRequestWithPathParameter()
         getRequestWithQueryParameter()
     }
 
