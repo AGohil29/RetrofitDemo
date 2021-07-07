@@ -11,25 +11,20 @@ import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var retrofitService: AlbumService
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val retrofitService = RetrofitInstance
+        retrofitService = RetrofitInstance
             .getRetrofitInstance()
             .create(AlbumService::class.java)
 
-        // path parameters example
-        val pathResponse : LiveData<Response<AlbumsItem>> = liveData {
-            val response = retrofitService.getAlbum(3)
-            emit(response)
-        }
+        //getRequestWithPathParameter()
+        getRequestWithQueryParameter()
+    }
 
-        pathResponse.observe(this, Observer {
-            val title = it.body()?.title
-            Toast.makeText(applicationContext, title, Toast.LENGTH_LONG).show()
-        })
-
+    private fun getRequestWithQueryParameter() {
         val responseLiveData: LiveData<Response<Albums>> = liveData {
             val response = retrofitService.getSortedAlbums(3)
             emit(response)
@@ -46,6 +41,18 @@ class MainActivity : AppCompatActivity() {
                     textView.append(result)
                 }
             }
+        })
+    }
+
+    private fun getRequestWithPathParameter() {
+        val pathResponse : LiveData<Response<AlbumsItem>> = liveData {
+            val response = retrofitService.getAlbum(3)
+            emit(response)
+        }
+
+        pathResponse.observe(this, Observer {
+            val title = it.body()?.title
+            Toast.makeText(this, title, Toast.LENGTH_LONG).show()
         })
     }
 }
